@@ -1,17 +1,81 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <h3>Horses and stuff</h3>
+    <p>
+      With Array
+      <auto-complete :dataArray="horses"/>
+    </p>
+    <p>
+      With method
+      <auto-complete :method="getHorses"/>
+    </p>
+    <p>
+      With Url
+      <auto-complete
+        url="https://api.datamuse.com/words?max=10&sp="
+        text_attribute="word"/>
+    </p>
+    <p>
+      With Url and urlCallback
+      <auto-complete
+        url="https://api.datamuse.com/words?max=10&sp="
+        text_attribute="word"
+        :urlCallback="postProcess"
+      />
+    </p>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import AutoComplete from '@/components/AutoComplete.vue'
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
+    AutoComplete
+  },
+  data () {
+    return {
+      'horses': [
+        {
+          text: 'brown',
+          abbr: 'br'
+        },
+        {
+          text: 'black',
+          abbr: 'bl'
+        },
+        {
+          text: 'tall',
+          abbr: 't'
+        }
+      ]
+    }
+  },
+  methods: {
+    getHorses (query) {
+      let horses =  [
+        {
+          text: 'brown',
+          abbr: 'br'
+        },
+        {
+          text: 'black',
+          abbr: 'bl'
+        },
+        {
+          text: 'tall',
+          abbr: 't'
+        }
+      ];
+      return horses.filter(h => h.text.indexOf(query) > -1)
+    },
+    postProcess (data) {
+      return data.map(d => {
+        delete d.score;
+        return d;
+      })
+    }
   }
 }
 </script>
@@ -25,4 +89,9 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
+p {
+ display: inline-block;
+  margin-right: 30px;
+}
+
 </style>
