@@ -55,12 +55,14 @@ export default {
       this.selected = true;
       this.$emit('autocomplete-selected', suggestion);
     },
-    filterDataArray (query, things, textAttribute) {
-      return things.filter(t => t[textAttribute].indexOf(query) > -1)
+    filterDataArray (query, data, textAttribute) {
+      return data.filter(
+        d => d[textAttribute].toLowerCase().indexOf(query.toLowerCase()) > -1
+      );
     },
     getData (query) {
       this.selected = false;
-      this.$emit('autocomplete-clear')
+      this.$emit('autocomplete-clear');
       let url;
       if (this.url || this.getUrl) {
         if (this.getUrl) {

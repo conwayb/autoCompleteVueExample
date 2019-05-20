@@ -1,25 +1,26 @@
 <template>
   <div id="app">
     <h2>Autocomplete Example</h2>
-    <div class='event--notification'>
-        You chose: {{ chosenSuggestion }}
-    </div>
+    <p>Try Colors?</p>
     <div class='wrapper'>
       <div class='example'>
-        <p>With Array</p>
+        <p>With Array and event handler</p>
         <auto-complete
           @autocomplete-selected="setChoice"
           @autocomplete-clear="setChoice"
-          :dataArray="horses"/>
+          :dataArray="colors"/>
+          <div class='selected--wrapper'>
+              You chose: {{ chosenSuggestion }}
+          </div>
       </div>
       <div class='example'>
         <p>With Method and custom noResultsText</p>
         <auto-complete
-          :method="getHorses"
+          :method="getColors"
           noResultsText="Where's the beef?"/>
       </div>
       <div class='example'>
-        <p>With Url</p>
+        <p>With Url <em>(datamuse words API)</em></p>
         <auto-complete
           :url="endpoint"
           textAttribute="word"/>
@@ -46,19 +47,23 @@ export default {
   },
   data () {
     return {
-      'horses': [
+      'colors': [
         {
-          text: 'brown',
-          abbr: 'br'
+          text: 'Yellow',
+          abbr: 'Y'
         },
         {
-          text: 'black',
-          abbr: 'bl'
+          text: 'Red',
+          abbr: 'R'
         },
         {
-          text: 'tall',
-          abbr: 't'
-        }
+          text: 'Blue',
+          abbr: 'B'
+        },
+        {
+          text: 'Green',
+          abbr: 'G'
+        },
       ],
       endpoint: "https://api.datamuse.com/words?sp=",
       chosenSuggestion: null,
@@ -70,25 +75,11 @@ export default {
         this.chosenSuggestion = null;
         return
       }
-      if (value.word) this.chosenSuggestion = value.word;
-      else if (value.text) this.chosenSuggestion = value.text;
+      if (value.text) this.chosenSuggestion = value.text;
     },
-    getHorses (query) {
-      let horses =  [
-        {
-          text: 'brown',
-          abbr: 'br'
-        },
-        {
-          text: 'black',
-          abbr: 'bl'
-        },
-        {
-          text: 'tall',
-          abbr: 't'
-        }
-      ];
-      return horses.filter(h => h.text.indexOf(query) > -1)
+    getColors (query) {
+      return this.colors.filter(
+        c => c.text.toLowerCase().indexOf(query.toLowerCase()) > -1)
     },
     constructUrl (query) {
       return `${this.endpoint}${query}&max=4`
@@ -123,6 +114,8 @@ export default {
   margin-right: 30px;
   height: 100vh;
 }
-
+.selected--wrapper {
+  margin-top: 1em;
+}
 
 </style>
