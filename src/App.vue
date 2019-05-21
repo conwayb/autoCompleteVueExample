@@ -8,8 +8,7 @@
         <auto-complete
           @autocomplete-selected="setChoice"
           @autocomplete-clear="setChoice"
-          :dataArray="colors"
-          textAttribute="text"/>
+          :dataArray="colors"/>
           <div class='selected--wrapper'>
               You chose: {{ chosenSuggestion }}
           </div>
@@ -49,7 +48,7 @@ export default {
   },
   data () {
     return {
-      'colors': [
+      colors: [
         {
           text: 'Yellow',
           abbr: 'Y'
@@ -73,11 +72,12 @@ export default {
   },
   methods: {
     setChoice (value) {
+      // value is the selected suggestion object
       if (!value) {
         this.chosenSuggestion = null;
         return
       }
-      if (value.text) this.chosenSuggestion = value.text;
+      this.chosenSuggestion = value.text
     },
     getColors (query) {
       // this can be syncronous or ajax, eg:
@@ -87,7 +87,7 @@ export default {
       }).catch((e)=> { console.error(e) });
     },
     constructUrl (query) {
-      return `${this.endpoint}${query}&max=4`
+      return `${this.endpoint}${query}*&max=4`
     },
     postProcess (data) {
       return data.map(d => {

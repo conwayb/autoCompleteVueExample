@@ -1,11 +1,17 @@
 <template>
   <div class='autocomplete--container'>
-    <input class='search-box' type='text'
-      @input="getData(search_param)" v-model="search_param"/>
+    <input class='search-box' type='text' ref='input'
+      v-on:keydown.down="moveFocus(0, $event)"
+      v-on:input="getData(search_param)"
+      v-model="search_param"
+    />
     <div class='autocomplete--suggestions--container'
       v-show="suggestions.length && search_param && !selected">
-      <ul class='autocomplete--suggestions--list'>
-        <li v-for="suggestion in suggestions">
+      <ul ref="suggestions" class='autocomplete--suggestions--list'>
+        <li tabindex="0" v-for="suggestion in suggestions"
+            v-on:keydown.up="moveFocus(-1, $event)"
+            v-on:keydown.down="moveFocus(1, $event)"
+            v-on:keydown.enter="setInputValue(suggestion)">
           <div
               @click="setInputValue(suggestion)"
               class='suggestion'>
@@ -39,8 +45,8 @@ export default {
     'url': String, // simple case only: appends query to url;
     'getUrl': Function, // Construct url given 'query' parameters
     'urlCallback': Function, // post process data from url
-    'textAttribute': { /* the text to display from results set */
-        type: String, default: null
+    'textAttribute': { /* the attribute to display from results set */
+        type: String, default: 'text'
     },
     'noResultsText': { type: String, default: 'Sorry, no results'}
   },
@@ -48,22 +54,39 @@ export default {
     return {
       selected: false,
       search_param: null,
-      suggestions: []
+      suggestions: [],
     }
   },
   methods: {
+    moveFocus (direction, $event) {
+      if (direction == 0) {
+        this.$refs.suggestions.children[0].focus()
+      }
+      else if (direction == 1) {
+          if (document.activeElement.nextSibling) {
+            document.activeElement.nextSibling.focus();
+          }
+      }
+      else {
+          if (document.activeElement == this.$refs.suggestions.children[0]) {
+            this.$refs.input.focus();
+          }
+          if (document.activeElement.previousSibling) {
+            document.activeElement.previousSibling.focus();
+          }
+      }
+      $event.preventDefault();
+    },
     setInputValue (suggestion) {
-      this.search_param = suggestion[this.textAttribute];
+      this.search_param = suggestion[this.textAttribute]
       this.selected = true;
+      this.$refs.input.focus();
       this.$emit('autocomplete-selected', suggestion);
     },
-    filterDataArray (query, data, textAttribute) {
-      // simple case, see if query is in array
-      if (!this.textAttribute) {
-          return data.filter(d.toLowerCase().indexOf(query.toLowerCase()) > -1);
-      }
-      return data.filter(
-        d => d[textAttribute].toLowerCase().indexOf(query.toLowerCase()) > -1);
+    filterDataArray (query) {
+      return this.dataArray.filter(
+        d => d[this.textAttribute].toLowerCase().indexOf(
+          query.toLowerCase()) > -1);
     },
     getData (query) {
       this.selected = false;
@@ -83,7 +106,6 @@ export default {
             }).then((data)=> {
               if (this.urlCallback) {
                 this.suggestions = this.urlCallback(data);
-                console.log(this.suggestions)
               }
               else {
                 this.suggestions = data;
@@ -101,9 +123,7 @@ export default {
         }
       }
       else if (this.dataArray) {
-        this.suggestions = this.filterDataArray(
-          query, this.dataArray, this.textAttribute
-        );
+        this.suggestions = this.filterDataArray(query);
       }
       else {
         throw new Error(
@@ -135,6 +155,9 @@ li {
 }
 .suggestion {
   cursor: pointer;
+}
+li:focus {
+  background: #ccc;
 }
 .suggestion--attribute {
   display: inline-block;
