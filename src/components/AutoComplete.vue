@@ -2,12 +2,12 @@
   <div class='autocomplete--container'>
     <input class='search-box' type='text' ref='input'
       v-on:keydown.down="moveFocus(0, $event)"
-      v-on:input="getData(search_param)"
-      v-model="search_param"
-      v-on:keydown.enter="setInputValue(search_param)"
+      v-on:input="getData(query)"
+      v-model="query"
+      v-on:keydown.enter="setInputValue(query)"
     />
     <div class='autocomplete--suggestions--container'
-      v-show="suggestions.length && search_param && !selected">
+      v-show="suggestions.length && query && !selected">
       <ul ref="suggestions" class='autocomplete--suggestions--list'>
         <li tabindex="0" v-for="suggestion in suggestions"
             v-on:click="setInputValue(suggestion)"
@@ -27,7 +27,7 @@
       </ul>
     </div>
     <div class='autocomplete--suggestions--container'
-         v-show="!suggestions.length && search_param">
+         v-show="!suggestions.length && query">
       <ul class="no-results-container">
         <li class="no-results-container">
           {{ noResultsText}}
@@ -55,7 +55,7 @@ export default {
   data () {
     return {
       selected: false,
-      search_param: null,
+      query: null,
       suggestions: [],
     }
   },
@@ -83,10 +83,10 @@ export default {
     },
     setInputValue (suggestion) {
       if (!suggestion[this.textAttribute]) {
-        this.search_param = suggestion;
+        this.query = suggestion;
       }
       else {
-        this.search_param = suggestion[this.textAttribute]
+        this.query = suggestion[this.textAttribute]
       }
       this.selected = true;
       this.$refs.input.focus();
