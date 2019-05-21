@@ -10,6 +10,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "install": "npm run build-bundle",
     "build-bundle": "vue-cli-service build --target lib --name autocomplete ./src/AutoComplete.vue",
     "lint": "vue-cli-service lint"
   },
