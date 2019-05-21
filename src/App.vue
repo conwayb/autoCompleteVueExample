@@ -35,28 +35,31 @@
         />
       </div>
       <div class='example'>
-        <p>With Computed and custom template</p>
+        <p>Advanced configuration</p>
         <auto-complete
-          :dataArray="prefetchedColors">
-          <template v-slot:default="attributes">
-            <span :class="attributes.text.toLowerCase()">
-              {{ attributes.text }}
-            </span>
-            <span> ({{ attributes.shade }})</span>
+          :dataArray="prefetchedColors"
+          :method="searchColorOrShade">
+          <template v-slot="attributes">
+            <auto-complete-item :item="attributes"/>
           </template>
         </auto-complete>
+        <p>
+          Combines a computed data array with a method to filter the array and a custom component for each autocomplete suggestion
+        </p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import AutoComplete from '@/components/AutoComplete.vue'
+import AutoCompleteItem from '@/components/AutoCompleteItem.vue';
+import AutoComplete from '@/components/AutoComplete.vue';
 
 export default {
   name: 'app',
   components: {
-    AutoComplete
+    AutoCompleteItem,
+    AutoComplete,
   },
   data () {
     return {
@@ -99,6 +102,11 @@ export default {
          return this.colors.filter(
             c => c.text.toLowerCase().indexOf(query.toLowerCase()) > -1)
       }).catch((e)=> { console.error(e) });
+    },
+    searchColorOrShade (query) {
+      return this.prefetched_colors.filter(
+         c => c.text.toLowerCase().indexOf(query.toLowerCase()) > -1 ||
+         c.shade.toLowerCase().indexOf(query.toLowerCase()) > -1)
     },
     constructUrl (query) {
       return `${this.endpoint}${query}*&max=4`
