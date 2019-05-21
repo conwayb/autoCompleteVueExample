@@ -57,8 +57,8 @@
 </template>
 
 <script>
-import AutoCompleteItem from '@/components/AutoCompleteItem.vue';
-import AutoComplete from '@/components/AutoComplete.vue';
+import AutoCompleteItem from './components/AutoCompleteItem.vue';
+import AutoComplete from './../AutoComplete.vue';
 
 export default {
   name: 'app',
