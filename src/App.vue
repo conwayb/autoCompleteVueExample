@@ -9,8 +9,10 @@
           @autocomplete-selected="setChoice"
           @autocomplete-clear="setChoice"
           :dataArray="colors"/>
+          <p>Supply a static array of objects<br>
+          Listen for selected and clear events</p>
           <div class='selected--wrapper'>
-              You chose: {{ chosenSuggestion }}
+              <b>You chose: {{ chosenSuggestion }}</b>
           </div>
       </div>
       <div class='example'>
@@ -19,12 +21,16 @@
           :method="getColors"
           textAttribute="text"
           noResultsText="Where's the beef?"/>
+          <p>Supply a method that gets called everytime user input changes<br>
+          Method can be synconous or use ajax</p>
       </div>
       <div class='example'>
         <p>With API Url <em>(datamuse words API)</em></p>
         <auto-complete
           :url="endpoint"
           textAttribute="word"/>
+          <p>Simple ajax case<br>
+          Pass a url to which the input query is appended</p>
       </div>
       <div class='example'>
         <p>With API getUrl and urlCallback</p>
@@ -33,6 +39,7 @@
           :urlCallback="postProcess"
           textAttribute="word"
         />
+        <p>Construct a dynamic url and postprocess results with urlCallback method</p>
       </div>
       <div class='example'>
         <p>Advanced configuration</p>
@@ -43,9 +50,7 @@
             <auto-complete-item :item="attributes"/>
           </template>
         </auto-complete>
-        <p>
-          Combines a computed data array with a method to filter the array and a custom component for each autocomplete suggestion
-        </p>
+        <p>Combines a computed data array, a method to filter the array, <br>and a custom component for each autocomplete suggestion</p>
       </div>
     </div>
   </div>
