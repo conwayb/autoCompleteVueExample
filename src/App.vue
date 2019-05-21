@@ -8,7 +8,8 @@
         <auto-complete
           @autocomplete-selected="setChoice"
           @autocomplete-clear="setChoice"
-          :dataArray="colors"/>
+          :dataArray="colors"
+          textAttribute="text"/>
           <div class='selected--wrapper'>
               You chose: {{ chosenSuggestion }}
           </div>
@@ -17,6 +18,7 @@
         <p>With Method and custom noResultsText</p>
         <auto-complete
           :method="getColors"
+          textAttribute="text"
           noResultsText="Where's the beef?"/>
       </div>
       <div class='example'>
@@ -78,8 +80,11 @@ export default {
       if (value.text) this.chosenSuggestion = value.text;
     },
     getColors (query) {
-      return this.colors.filter(
-        c => c.text.toLowerCase().indexOf(query.toLowerCase()) > -1)
+      // this can be syncronous or ajax, eg:
+      return fetch('/').then((r) => {
+         return this.colors.filter(
+            c => c.text.toLowerCase().indexOf(query.toLowerCase()) > -1)
+      }).catch((e)=> { console.error(e) });
     },
     constructUrl (query) {
       return `${this.endpoint}${query}&max=4`

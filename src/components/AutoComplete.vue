@@ -34,12 +34,14 @@
 export default {
   name: 'auto-complete',
   props: {
-    'method': Function,
-    'url': String,
-    'getUrl': Function,
-    'urlCallback': Function, // post process url
     'dataArray': Array,
-    'textAttribute': { type: String, default: 'text'},
+    'method': Function,
+    'url': String, // simple case only: appends query to url;
+    'getUrl': Function, // Construct url given 'query' parameters
+    'urlCallback': Function, // post process data from url
+    'textAttribute': { /* the text to display from results set */
+        type: String, default: null
+    },
     'noResultsText': { type: String, default: 'Sorry, no results'}
   },
   data () {
@@ -56,9 +58,12 @@ export default {
       this.$emit('autocomplete-selected', suggestion);
     },
     filterDataArray (query, data, textAttribute) {
+      // simple case, see if query is in array
+      if (!this.textAttribute) {
+          return data.filter(d.toLowerCase().indexOf(query.toLowerCase()) > -1);
+      }
       return data.filter(
-        d => d[textAttribute].toLowerCase().indexOf(query.toLowerCase()) > -1
-      );
+        d => d[textAttribute].toLowerCase().indexOf(query.toLowerCase()) > -1);
     },
     getData (query) {
       this.selected = false;
@@ -90,7 +95,9 @@ export default {
       }
       else if (this.method) {
         if (this.method instanceof Function) {
-          this.suggestions = this.method(query);
+          let data = Promise.resolve(this.method(query)).then((data) => {
+            this.suggestions = data;
+          })
         }
       }
       else if (this.dataArray) {
