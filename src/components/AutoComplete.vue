@@ -4,6 +4,7 @@
       v-on:keydown.down="moveFocus(0, $event)"
       v-on:input="getData(search_param)"
       v-model="search_param"
+      v-on:keydown.enter="setInputValue(search_param)"
     />
     <div class='autocomplete--suggestions--container'
       v-show="suggestions.length && search_param && !selected">
@@ -79,7 +80,12 @@ export default {
       $event.preventDefault();
     },
     setInputValue (suggestion) {
-      this.search_param = suggestion[this.textAttribute]
+      if (!suggestion[this.textAttribute]) {
+        this.search_param = suggestion;
+      }
+      else {
+        this.search_param = suggestion[this.textAttribute]
+      }
       this.selected = true;
       this.$refs.input.focus();
       this.$emit('autocomplete-selected', suggestion);

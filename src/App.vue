@@ -89,7 +89,8 @@ export default {
         this.chosenSuggestion = null;
         return
       }
-      this.chosenSuggestion = value.text
+      if (value.text) this.chosenSuggestion = value.text;
+      else this.chosenSuggestion = value;
     },
     getColors (query) {
       // this can be syncronous or ajax, eg:
