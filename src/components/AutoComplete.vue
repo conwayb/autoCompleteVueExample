@@ -42,7 +42,7 @@
 export default {
   name: 'auto-complete',
   props: {
-    'dataArray': Array,
+    'dataArray': Array, // can be static or a computed property
     'method': Function,
     'url': String, // simple case only: appends query to url;
     'getUrl': Function, // Construct url given 'query' parameters

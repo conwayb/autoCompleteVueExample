@@ -35,14 +35,14 @@
         />
       </div>
       <div class='example'>
-        <p>With Array and custom item template</p>
+        <p>With Computed and custom template</p>
         <auto-complete
-          :dataArray="colors">
+          :dataArray="prefetchedColors">
           <template v-slot:default="attributes">
             <span :class="attributes.text.toLowerCase()">
               {{ attributes.text }}
             </span>
-            <span> ({{ attributes.abbr }})</span>
+            <span> ({{ attributes.shade }})</span>
           </template>
         </auto-complete>
       </div>
@@ -80,6 +80,7 @@ export default {
       ],
       endpoint: "https://api.datamuse.com/words?sp=",
       chosenSuggestion: null,
+      prefetched_colors: [],
     }
   },
   methods: {
@@ -108,6 +109,33 @@ export default {
         return d;
       })
     }
+  },
+  computed: {
+    prefetchedColors () {
+      return this.prefetched_colors;
+    }
+  },
+  mounted () {
+    return fetch('/').then((r) => {
+      this.prefetched_colors = [
+        {
+          text: 'Yellow',
+          shade: 'lemon'
+        },
+        {
+          text: 'Red',
+          shade: 'ruby'
+        },
+        {
+          text: 'Blue',
+          shade: 'aqua'
+        },
+        {
+          text: 'Green',
+          shade: 'olive'
+        },
+      ]
+    });
   }
 }
 </script>
