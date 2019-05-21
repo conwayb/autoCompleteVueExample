@@ -62,7 +62,9 @@ export default {
   methods: {
     moveFocus (direction, $event) {
       if (direction == 0) {
-        this.$refs.suggestions.children[0].focus()
+        if (this.$refs.suggestions.children.length) {
+          this.$refs.suggestions.children[0].focus()
+        }
       }
       else if (direction == 1) {
           if (document.activeElement.nextSibling) {
