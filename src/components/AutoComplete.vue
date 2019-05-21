@@ -137,6 +137,9 @@ export default {
 <style scoped>
 input {
   width: 99%;
+  padding: 0.25em;
+  font-size: inherit;
+  font-family: inherit;
 }
 .autocomplete--suggestions--container {
   border: 1px solid #ccc;
