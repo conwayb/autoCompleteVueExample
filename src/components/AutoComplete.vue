@@ -9,18 +9,19 @@
       v-show="suggestions.length && search_param && !selected">
       <ul ref="suggestions" class='autocomplete--suggestions--list'>
         <li tabindex="0" v-for="suggestion in suggestions"
+            v-on:click="setInputValue(suggestion)"
             v-on:keydown.up="moveFocus(-1, $event)"
             v-on:keydown.down="moveFocus(1, $event)"
             v-on:keydown.enter="setInputValue(suggestion)">
-          <div
-              @click="setInputValue(suggestion)"
-              class='suggestion'>
-            <div
-              v-for='attribute in suggestion'
-              class='suggestion--attribute'>
-              {{ attribute }}
+          <slot v-bind="suggestion">
+            <div class='suggestion'>
+              <div
+                v-for='attribute in suggestion'
+                class='suggestion--attribute'>
+                {{ attribute }}
+              </div>
             </div>
-          </div>
+          </slot>
         </li>
       </ul>
     </div>
@@ -48,7 +49,7 @@ export default {
     'textAttribute': { /* the attribute to display from results set */
         type: String, default: 'text'
     },
-    'noResultsText': { type: String, default: 'Sorry, no results'}
+    'noResultsText': { type: String, default: 'Sorry, no results'},
   },
   data () {
     return {

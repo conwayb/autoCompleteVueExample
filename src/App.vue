@@ -21,18 +21,30 @@
           noResultsText="Where's the beef?"/>
       </div>
       <div class='example'>
-        <p>With Url <em>(datamuse words API)</em></p>
+        <p>With API Url <em>(datamuse words API)</em></p>
         <auto-complete
           :url="endpoint"
           textAttribute="word"/>
       </div>
       <div class='example'>
-        <p>With getUrl and urlCallback</p>
+        <p>With API getUrl and urlCallback</p>
         <auto-complete
           :getUrl="constructUrl"
           :urlCallback="postProcess"
           textAttribute="word"
         />
+      </div>
+      <div class='example'>
+        <p>With Array and custom item template</p>
+        <auto-complete
+          :dataArray="colors">
+          <template v-slot:default="attributes">
+            <span :class="attributes.text.toLowerCase()">
+              {{ attributes.text }}
+            </span>
+            <span> ({{ attributes.abbr }})</span>
+          </template>
+        </auto-complete>
       </div>
     </div>
   </div>
@@ -110,9 +122,9 @@ export default {
 }
 .wrapper {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-gap: 4%;
-  margin: 2% 10%;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-gap: 3%;
+  margin: 2% 3%;
 }
 .example {
   display: inline-block;
@@ -122,5 +134,16 @@ export default {
 .selected--wrapper {
   margin-top: 1em;
 }
-
+.green {
+  color: green;
+}
+.red {
+  color: red;
+}
+.blue {
+  color: blue;
+}
+.yellow {
+  color: yellow;
+}
 </style>
